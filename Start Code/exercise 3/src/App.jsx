@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 
 import OrderCard from "./components/OrderCard";
 import CheckoutButton from "./components/CheckoutButton";
@@ -23,6 +23,14 @@ const ORDERS = [
 
 export default function App() {
   const [orders, setOrders] = React.useState(ORDERS);
+  const updateQuantity = (index, newQuantity) => {
+    const updated = [...orders];
+    updated[index].quantity = newQuantity;
+    setOrders(updated);
+  };
+
+  const total = orders.reduce(
+    (sum, order) => sum + order.price * order.quantity,0);
 
   return (
     <>
@@ -31,10 +39,13 @@ export default function App() {
       </header>
 
       <div className="order-list">
-        <OrderCard></OrderCard>
+        {orders.map ((order,i) => (<OrderCard key={i}
+        item={order} onChangeQuantity={(q) => updateQuantity(i,q)} ></OrderCard>
+      ))}
+        
       </div>
 
-      <CheckoutButton total="TODO"></CheckoutButton>
+      <CheckoutButton total={total}></CheckoutButton>
     </>
   );
 }
